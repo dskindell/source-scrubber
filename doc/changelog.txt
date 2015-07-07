@@ -1,0 +1,5 @@
+2015-07-06  David Skindell  <David.Skindell@pmcs.com>
+
+        0.0.2
+          * Initial release 
+
