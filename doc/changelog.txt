@@ -1,5 +1,8 @@
 2015-07-06  David Skindell  <David.Skindell@pmcs.com>
 
+        0.0.2 - 0.0.3
+          * Fix --strip-whitespace option
+
         0.0.2
           * Initial release 
 

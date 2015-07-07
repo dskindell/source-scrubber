@@ -38,14 +38,14 @@ DEFAULT_EXT_TO_IGNORE = %w(o obj bin exe a lib png jpg gif jif mpeg docx json).c
 begin
 require 'source-scrubber/version'
 rescue LoadError
+require 'rubygems'
 module SourceScrubber
-  VERSION = '0.0.2.pre'
+  VERSION = GEM::Version.new('0.0.3.pre')
 end
 end
 
 begin
   options = {
-    directory: Dir.pwd,
     exclude_extensions: DEFAULT_EXT_TO_IGNORE,
   }
   OptionParser.new do |opts|
@@ -74,7 +74,8 @@ begin
     opts.on('-d', '--directory [PATH]', 'Search recursively from directory PATH.',
                                         '  (searchs from current directory otherwise)') do |path|
       raise "Could not find PATH <#{path}>" unless File.exists?(path)
-      options[:directory] = (RUBY_PLATFORM =~ /linux/ ? path.strip : path.gsub('\\', '/').strip)
+      options[:directories] ||= []
+      options[:directories] << (RUBY_PLATFORM =~ /linux/ ? path.strip : path.gsub('\\', '/').strip)
     end
     opts.on('--replace [STRING]', 'DANGEROUS! After reporting invalid characers',
                                   '  replace them in the file with STRING') do |rel|
@@ -97,7 +98,9 @@ begin
       exit
     end
   end.parse!
-  all_files = Dir[File.join(options[:directory], '**', '*')].select { |f| File.file?(f) }
+  all_files = (options[:directories] || [Dir.pwd]).collect { |d|
+    Dir[File.join(d, '**', '*')].select { |f| File.file?(f) }
+  }.flatten
   unless options[:extensions].nil? or options[:extensions].empty?
     all_files.select! { |f| options[:extensions].any? { |ext| File.extname(f).upcase == ext.upcase } }
   end
@@ -129,8 +132,8 @@ begin
       rewrite_file = true
     end
 
-    if options[:strip_whitespaces] == true
-      contents.gsub!(/[ \t]+$/,'')
+    if options[:strip_lines] == true
+      contents.gsub!(/[ \t]+(\r?)$/,'\1')
       rewrite_file = true
     end
     
@@ -148,7 +151,6 @@ begin
       puts "Issues in file: #{file}",
            messages.collect { |m| "  -> #{m}" }.join("\n")
     end
-
     if rewrite_file and contents != old_contents 
       File.open(file, 'w').write(contents)
     end
