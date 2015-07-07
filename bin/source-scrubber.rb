@@ -86,6 +86,10 @@ begin
       puts opts
       exit
     end
+    opts.on_tail('-v', '--version', 'Show version') do
+      puts SourceScrubber::VERSION
+      exit
+    end
   end.parse!
   all_files = Dir[File.join(options[:directory], '**', '*')].select { |f| File.file?(f) }
   unless options[:extensions].nil? or options[:extensions].empty?
