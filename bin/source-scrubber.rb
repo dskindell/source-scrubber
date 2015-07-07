@@ -35,7 +35,13 @@ end
 
 DEFAULT_EXT_TO_IGNORE = %w(o obj bin exe a lib png jpg gif jif mpeg docx json).collect { |e| '.'+e }
 
+begin
 require 'source-scrubber/version'
+rescue LoadError
+module SourceScrubber
+  VERSION = '0.0.2.pre'
+end
+end
 
 begin
   options = {
