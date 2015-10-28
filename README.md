@@ -1,12 +1,17 @@
 # source-scrubber
 
-Build:
+### Build:
+```
 $ rake build
+```
 
-Install:
+### Install:
+```
 $ rake install
+```
 
-Help:
+### Help:
+```
 source-scrubber --help
 Usage: source-scrubber.rb [OPTIONS]
     -f, --file [FILE]                Scrub ONLY the given file.
@@ -31,7 +36,10 @@ Usage: source-scrubber.rb [OPTIONS]
 
 If --[no-]clean-whitespaces is not given, trailing whitespaces will be reported but files will not be changed.
 If --[no-]add-missing-newline is not given, missing EOF newlines will be reported but files will not be changed.
+```
 
-Example:
+### Example:
+```
 # Remove trailing newlines and add missing EOF newlines in all .cpp and .h files under directory projects/
 $ source-scrubber -d projects -e .cpp -e .h --clean-whitespaces --add-missing-newline
+```
